@@ -5,3 +5,8 @@ Django Countria Changelog
 Version 0.1, 16th March 2010
 ========================
 Initial Release
+
+Version 0.2, 17th March 2011
+========================
+Removed translations (and translations dependency) –tijs
+
