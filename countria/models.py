@@ -25,9 +25,10 @@ class Continent(models.Model):
 class Country(models.Model):
     name            = models.CharField(max_length=64, unique=True)
     full_name       = models.CharField(max_length=64)
-    currency        = models.ForeignKey(Currency, null=True)
+    currency        = models.ForeignKey('Currency', null=True)
     sovereignty     = models.ForeignKey('self', null=True)
     capital         = models.ForeignKey('City', null=True, related_name="country_capital")   
+    idc             = models.PositiveIntegerField(null=True) # International Dialing Code
     iso_2           = models.CharField(max_length=2, null=True)
     iso_3           = models.CharField(max_length=3, null=True)
     iso_number      = models.PositiveIntegerField(null=True)
@@ -35,7 +36,12 @@ class Country(models.Model):
     latitude        = models.DecimalField(max_digits=9, decimal_places=6, default=Decimal("0.0"))
     longitude       = models.DecimalField(max_digits=9, decimal_places=6, default=Decimal("0.0"))
     population      = models.PositiveIntegerField(null=True)
-    continent       = models.ForeignKey('Continent', null=True)
+    continent       = models.ForeignKey(Continent, null=True)
+
+    def __calling_code(self):
+        return '00%d' % self.idc
+
+    calling_code = property(__calling_code)
 
     def __unicode__(self):
         if hasattr(settings, 'MAX_COUNTRY_NAME_LENGTH'):
@@ -47,6 +53,7 @@ class City(models.Model):
     name = models.CharField(max_length=64)
     country     = models.ForeignKey('Country', null=True)
     state       = models.ForeignKey('State', null=True)
+    population  = models.PositiveIntegerField(null=True)
     latitude    = models.DecimalField(max_digits=9, decimal_places=6, default=Decimal("0.0"))
     longitude   = models.DecimalField(max_digits=9, decimal_places=6, default=Decimal("0.0"))
 
